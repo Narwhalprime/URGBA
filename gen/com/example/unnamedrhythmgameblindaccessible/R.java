@@ -34,7 +34,10 @@ public final class R {
         public static final int main=0x7f080000;
     }
     public static final class raw {
-        public static final int hitwhistle=0x7f040000;
+        public static final int daftpunk=0x7f040000;
+        public static final int get_lucky=0x7f040001;
+        public static final int song_info=0x7f040002;
+        public static final int whistle=0x7f040003;
     }
     public static final class string {
         public static final int action_settings=0x7f060001;

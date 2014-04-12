@@ -8,16 +8,17 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 
 public class GameActivity extends Activity implements SensorEventListener {
 
+	final long START_DELAY = 5000; // delay before ANY playing happens
     final int MAX_RECORDS = 200;
-    final int SHAKE_THRESHOLD = 10; // min z-max/min difference 
+    final float SHAKE_THRESHOLD = 9.5f; // min z-max/min difference 
     
     // acceleration data from accelerometer
     float[] accel_data;
@@ -27,9 +28,10 @@ public class GameActivity extends Activity implements SensorEventListener {
     float mAccelPeak;
     
     // do I need these? more to come
-    long SONG_LENGTH_MS = 5000;
-    long SONG_DELAY_MS = 10;
-    double SONG_BPM = 120.0;
+    // TODO: hardcoded for Get Lucky
+    long SONG_LENGTH_MS = 408413;
+    long SONG_DELAY_MS = 140;
+    double SONG_BPM = 116.05;
     long NUMBER_BEATS;
     double BEAT_LENGTH;
 	
@@ -38,14 +40,16 @@ public class GameActivity extends Activity implements SensorEventListener {
 	
 	// sound stuff
 	SoundManager mSoundManager;
+	MediaPlayer mMediaPlayer;
 	
 	// sensor stuff
     SensorManager mSensorManager;
     Sensor mAccelerometer;
     
     // timer stuff
-    Timer gestureTimer = new Timer();
+    Timer mainTimer = new Timer();
     TimerTask beginNextInterval;
+    TimerTask beginSong;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,18 +66,24 @@ public class GameActivity extends Activity implements SensorEventListener {
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mSoundManager = new SoundManager();
         mSoundManager.initSounds(getBaseContext());
-        mSoundManager.addSound(1, R.raw.hitwhistle);
+        
+        // sound effects
+        mSoundManager.addSound(1, R.raw.whistle);
+        
+        // music
+        mSoundManager.addSound(10, R.raw.daftpunk);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
-		// timer tasks defined
+
+        mMediaPlayer = MediaPlayer.create(GameActivity.this, R.raw.daftpunk);
+		// timer tasks defined: check if shake or tap done
         beginNextInterval = new TimerTask() {
 			public void run()
 			{
-				Log.d("GameActivity", "playing metronome sound");
+				// Log.d("GameActivity", "playing metronome sound");
 				mSoundManager.playSound(1);
 				if(mAccelPeak > SHAKE_THRESHOLD)
 				{
@@ -83,17 +93,27 @@ public class GameActivity extends Activity implements SensorEventListener {
 				}
 			}
         };
+        beginSong = new TimerTask() {
+			public void run()
+			{
+				mMediaPlayer.start(); // play the song!
+			}
+        };
 		
-		gestureTimer = new Timer();
-		gestureTimer.scheduleAtFixedRate(beginNextInterval, SONG_DELAY_MS, (long)BEAT_LENGTH);
+        // initialize gestureTimer and the sensor manager on starting or resuming app
+		mainTimer = new Timer();
+		mainTimer.scheduleAtFixedRate(beginNextInterval, START_DELAY + SONG_DELAY_MS, (long)BEAT_LENGTH);
+		mainTimer.schedule(beginSong, START_DELAY);
 		mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
 	}
 	
 	@Override
 	protected void onPause() {
 		super.onPause();
-		gestureTimer.cancel();
+		mainTimer.cancel();
 		mSensorManager.unregisterListener(this);
+		mMediaPlayer.stop();
+		mMediaPlayer.reset();
 	}
 	
 	public void onSensorChanged(SensorEvent event) {
@@ -114,7 +134,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 		if(mAccel > mAccelPeak)
 		{
 			mAccelPeak = mAccel;
-			Log.d("GameActivity", "mAccelPeak = " + mAccelPeak);
+			// Log.d("GameActivity", "mAccelPeak = " + mAccelPeak);
 		}
 	 }
 	 
