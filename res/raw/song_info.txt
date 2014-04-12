@@ -1,2 +1,2 @@
 1
-get_lucky 116.05 140
+get_lucky 58.02 140
