@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Unnamed Rhythm Game Blind Accessible</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="debug_tap_screen">Screen tapped!</string>
+    <string name="debug_shake_screen">Screen shaked!</string>
+
+</resources>
