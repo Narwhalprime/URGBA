@@ -36,7 +36,7 @@ public final class R {
     public static final class raw {
         public static final int clap=0x7f040000;
         public static final int daftpunk=0x7f040001;
-        public static final int song_info=0x7f040002;
+        public static final int daftpunk_info=0x7f040002;
     }
     public static final class string {
         public static final int action_settings=0x7f060001;
