@@ -17,4 +17,12 @@
         android:text="Tap"
         android:onClick="onButtonTapped" />
 
+    <TextView
+        android:id="@+id/score_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tap_button"
+        android:layout_alignParentTop="true"
+        android:text="" />
+
 </RelativeLayout>
