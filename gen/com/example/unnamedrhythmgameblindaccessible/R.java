@@ -24,7 +24,8 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f090002;
+        public static final int action_settings=0x7f090003;
+        public static final int enter_main_button=0x7f090002;
         public static final int score_text_view=0x7f090001;
         public static final int tap_button=0x7f090000;
     }
@@ -39,12 +40,16 @@ public final class R {
     }
     public static final class raw {
         public static final int clap=0x7f040000;
-        public static final int daftpunk=0x7f040001;
-        public static final int daftpunk_info=0x7f040002;
-        public static final int finish_shake=0x7f040003;
-        public static final int finish_tap=0x7f040004;
-        public static final int three_tap=0x7f040005;
-        public static final int whistle=0x7f040006;
+        public static final int congrats=0x7f040001;
+        public static final int daftpunk=0x7f040002;
+        public static final int daftpunk_info=0x7f040003;
+        public static final int finish_shake=0x7f040004;
+        public static final int finish_tap=0x7f040005;
+        public static final int keep_trying=0x7f040006;
+        public static final int main_message=0x7f040007;
+        public static final int three_tap=0x7f040008;
+        public static final int welcome_message=0x7f040009;
+        public static final int whistle=0x7f04000a;
     }
     public static final class string {
         public static final int action_settings=0x7f060001;

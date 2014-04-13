@@ -43,9 +43,9 @@ public class GameActivity extends Activity implements SensorEventListener {
     // gameplay stuff!
     // TODO: even more hard-coding
     
-    // the sequence of notes // TODO last four should be a three tap sequence
+    // the sequence of notes
     //                '               '               '                   
-    String beatmap = "--------tTsS--tTsStTsSsS----tTtTsStTtTsS--tTsS-tTtTtTtTsStTsStTsStTtTtT----";
+    String beatmap = "--------tTsS--sStT--sStTtT--tTtTsStTtTsS--tTsS-tTtTtTtTsS-tTsStTsStTtTsS----";
     Map<String, String> patterns = new HashMap<String, String>(); // TODO: do this once singleton notes work
     boolean songStarted = false;
     int intervalCounter = 0;
@@ -134,6 +134,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 				// warning tone before tap
 				if(currentMapGesture == 't')
 				{
+					vibratePhone();
 					mMediaPlayerGestureWarnings = MediaPlayer.create(GameActivity.this, R.raw.whistle);
 					mMediaPlayerGestureWarnings.start();
 				}
