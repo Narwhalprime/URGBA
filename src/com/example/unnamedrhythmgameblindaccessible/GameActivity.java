@@ -21,8 +21,7 @@ import android.widget.TextView;
 
 public class GameActivity extends Activity implements SensorEventListener {
 
-	final long START_DELAY = 8000; // delay before ANY playing happens
-    final int MAX_RECORDS = 200;
+	final long START_DELAY = 1000; // delay before ANY playing happens
     final float SHAKE_THRESHOLD = 9f; // min velocity to trigger 
     final long VIBRATE_DURATION = 250;
     
@@ -33,8 +32,8 @@ public class GameActivity extends Activity implements SensorEventListener {
     float mAccelLast;
     float mAccelPeak;
     
-    // do I need these? more to come
-    // TODO: hard-coded values
+    // song info stuff
+    // read them from file instead
     double SONG_LENGTH_MS;
     double SONG_DELAY_MS = 140.0;
     double SONG_BPM = 58.025;
@@ -43,11 +42,11 @@ public class GameActivity extends Activity implements SensorEventListener {
 	
     // gameplay stuff!
     // TODO: even more hard-coding
-    String beatmap = "--------tTsS--"; // the sequence of notes
+    String beatmap = "--------tTsS--tTsStTsSsS----tTtTsStTtT----"; // the sequence of notes // TODO last four should be a three tap sequence
     Map<String, String> patterns = new HashMap<String, String>(); // TODO: do this once singleton notes work
     int intervalCounter = 0;
-    boolean hasTapped = false; // in current interval
-    boolean hasShaked = false;
+    int currentNumTaps = 0; // in current interval
+    int currentNumShakes = 0;
     char currentMapGesture = '-';
     char currentUserGesture = '-';
     int score = 0; // +2 for correct note, -2 for missing a note, -1 for hitting a note when there's nothing
@@ -62,6 +61,9 @@ public class GameActivity extends Activity implements SensorEventListener {
 	MediaPlayer mMediaPlayerGestureWarnings;
 	MediaPlayer mMediaPlayerGestureFeedback;
 	
+	// sound option stuff
+	
+	
 	// sensor stuff
     SensorManager mSensorManager;
     Sensor mAccelerometer;
@@ -69,10 +71,9 @@ public class GameActivity extends Activity implements SensorEventListener {
     // timer stuff
     Timer mainTimer = new Timer();
     TimerTask beginNextInterval;
-    TimerTask endInterval;
     TimerTask takeScore;
     TimerTask beginSong;
-    long timeSongStart;
+    long timeSongStart; // for debugging
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -111,27 +112,24 @@ public class GameActivity extends Activity implements SensorEventListener {
 					mMediaPlayerGestureWarnings.release();
 				}
 				
-				// Initiate a clap 
-		        mMediaPlayerMetronome = MediaPlayer.create(GameActivity.this, R.raw.clap);
-				mMediaPlayerMetronome.start();
-				Log.d("TIMING-CLAP", "TIMING-time = " + (System.currentTimeMillis() - timeSongStart));
+				// Clap - to set the beat
+				if(currentMapGesture == '-')
+				{
+					//Log.d("TIMING-CLAP", "TIMING-time = " + (System.currentTimeMillis() - timeSongStart));
+			        mMediaPlayerMetronome = MediaPlayer.create(GameActivity.this, R.raw.clap);
+					mMediaPlayerMetronome.start();
+				}
 				
-				// warning tone: shake
+				// warning tone before shake
 				if(currentMapGesture == 's')
 					vibratePhone();
 				
+				// warning tone before tap
 				if(currentMapGesture == 't')
 				{
 					mMediaPlayerGestureWarnings = MediaPlayer.create(GameActivity.this, R.raw.whistle);
 					mMediaPlayerGestureWarnings.start();
 				}
-			}
-        };
-        endInterval = new TimerTask() {
-			public void run()
-			{
-				mMediaPlayerMetronome.stop();
-				mMediaPlayerMetronome.release();
 			}
         };
         takeScore = new TimerTask() {
@@ -145,6 +143,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 				
 				intervalCounter = Math.min(intervalCounter + 1, beatmap.length() - 1);
 				currentMapGesture = beatmap.charAt(intervalCounter);
+				currentNumShakes = 0;
+				currentNumTaps = 0;
 			}
 		};
         beginSong = new TimerTask() {
@@ -208,9 +208,9 @@ public class GameActivity extends Activity implements SensorEventListener {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				hasTapped = true;
+				currentNumTaps++;
 				tapButton.setText(R.string.debug_tap_screen);
-				Log.d("TIMING-TAP", "TIMING-time = " + (System.currentTimeMillis() - timeSongStart));
+//				Log.d("TIMING-TAP", "TIMING-time = " + (System.currentTimeMillis() - timeSongStart));
 				currentUserGesture = 'T';
 			}
 		});
@@ -221,16 +221,16 @@ public class GameActivity extends Activity implements SensorEventListener {
 		runOnUiThread(new Runnable() {
 		     @Override
 		     public void run() {
-		    	 hasShaked = true;
+		    	 currentNumShakes++;
 		    	 tapButton.setText(R.string.debug_shake_screen);
-		    	 Log.d("TIMING-SHAKE", "TIMING-time = " + (System.currentTimeMillis() - timeSongStart));
+//		    	 Log.d("TIMING-SHAKE", "TIMING-time = " + (System.currentTimeMillis() - timeSongStart));
 		    	 currentUserGesture = 'S';
 		    }
 		});
 	}
 	
 	public void updateScore(char currentGesture) {
-		Log.d("TIMING-SCORE UPDATE", "TIMING-time = " + (System.currentTimeMillis() - timeSongStart));
+//		Log.d("TIMING-SCORE UPDATE", "TIMING-time = " + (System.currentTimeMillis() - timeSongStart));
 		switch(currentMapGesture)
 		{
 			case 'S':
@@ -258,14 +258,6 @@ public class GameActivity extends Activity implements SensorEventListener {
 					// TODO: negative feedback
 				}
 				break;
-				/*
-			default:
-				if(currentUserGesture != '-')
-				{
-					score -= 1;
-					// TODO: feedback
-				}
-				*/
 		}
 		runOnUiThread(new Runnable() {
 		     @Override

@@ -36,19 +36,6 @@ public class SoundManager {
 		float streamVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 		streamVolume = streamVolume / mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		mSoundPool.play(mSoundPoolMap.get(index), streamVolume, streamVolume, 1, 0, 1f);
-		
-		/*
-		final int indexFinal = index;
-		final float streamVolumeFinal = streamVolume;
-		mSoundPool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
-			
-			@Override
-			public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-				mSoundPool.play(mSoundPoolMap.get(indexFinal), streamVolumeFinal, streamVolumeFinal, 1, 0, 1f);
-			}
-		});
-		*/
-	    
 	}
 	 
 	public void playLoopedSound(int index)
