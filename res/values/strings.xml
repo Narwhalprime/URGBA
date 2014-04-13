@@ -8,5 +8,6 @@
     <string name="debug_shake_screen">Screen shaked!</string>
     <string name="title_activity_welcome">WelcomeActivity</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
 
 </resources>

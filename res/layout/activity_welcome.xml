@@ -15,7 +15,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:text="Enter URGBA"
-        android:textSize="24dp"
+        android:textSize="24sp"
         android:onClick="onButtonTapped" />
     
 </RelativeLayout>

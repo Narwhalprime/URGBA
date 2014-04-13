@@ -24,6 +24,6 @@
         android:layout_alignLeft="@+id/tap_button"
         android:layout_alignParentTop="true"
         android:text="" 
-        android:textSize="36dp" />
+        android:textSize="36sp" />
 
 </RelativeLayout>

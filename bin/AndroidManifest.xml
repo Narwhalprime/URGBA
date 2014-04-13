@@ -23,7 +23,6 @@
         <activity
             android:name="com.example.unnamedrhythmgameblindaccessible.WelcomeActivity"
             android:label="@string/title_activity_welcome" >
-            
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,6 +32,10 @@
         <activity
             android:name="com.example.unnamedrhythmgameblindaccessible.MainActivity"
             android:label="@string/title_activity_main" >
+        </activity>
+        <activity
+            android:name="com.example.unnamedrhythmgameblindaccessible.SettingsActivity"
+            android:label="@string/title_activity_settings" >
         </activity>
     </application>
 
