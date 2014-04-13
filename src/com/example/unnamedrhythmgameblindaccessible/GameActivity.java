@@ -46,8 +46,7 @@ public class GameActivity extends Activity implements SensorEventListener {
     // gameplay stuff!
     // TODO: even more hard-coding
     
-    // the sequence of notes
-    //                '             '                 '                   
+    // the sequence of notes                  
     String beatmap = "--------tTsS--sStT--sStT--sStTtTsStTtTsS-tT-sS-tTtTtTtTsS-tTsStTsStTtT-sS---";
     Map<String, String> patterns = new HashMap<String, String>(); // TODO: do this once singleton notes work
     boolean songStarted = false;
@@ -56,7 +55,7 @@ public class GameActivity extends Activity implements SensorEventListener {
     int currentNumShakes = 0;
     char currentMapGesture = '-';
     char currentUserGesture = '-';
-    int score = 0; // +2 for correct note, -2 for missing a note, -1 for hitting a note when there's nothing
+    int score = 0; // +2 for correct note, -2 for missing a note
     int maxScore = 54;
     
     // UI stuff
@@ -83,7 +82,6 @@ public class GameActivity extends Activity implements SensorEventListener {
     TimerTask takeScore;
     TimerTask beginSong;
     TimerTask returnToMainMenu;
-    Intent returnIntent = new Intent(this, MainActivity.class);
     long timeSongStart; // for debugging
 	
 	@Override
@@ -190,6 +188,7 @@ public class GameActivity extends Activity implements SensorEventListener {
         		runOnUiThread(new Runnable() {
         			@Override
         			public void run() {
+        				Intent returnIntent = new Intent(getBaseContext(), MainActivity.class);
 		            	startActivity(returnIntent);
         			}
         		});
