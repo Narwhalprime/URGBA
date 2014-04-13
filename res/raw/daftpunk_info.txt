@@ -1,2 +1,1 @@
-1
-get_lucky;58.025;140;
+daftpunk;58.025;140.0;--------tTsS--sStT--sStT--sStTtTsStTtTsS-tT-sS-tTtTtTtTsS-tTsStTsStTtT-sS---;54;

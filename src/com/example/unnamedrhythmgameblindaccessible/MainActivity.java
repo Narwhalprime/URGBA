@@ -10,6 +10,8 @@ import android.view.View;
 public class MainActivity extends Activity {
 
 	MediaPlayer mMediaPlayer;
+	// TODO: shh, this is a hack for demo purposes!
+	boolean isDaftPunk = true;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +30,22 @@ public class MainActivity extends Activity {
 		mMediaPlayer.start();
 	}
 	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		Intent intent = getIntent();
+		if(intent.getExtras() != null)
+			isDaftPunk = isDaftPunk ^ intent.getExtras().getBoolean("switch_song", false);
+	}
+	
 	public void switchToGameActivity(View view)
     {
     	Intent intent = new Intent(this, GameActivity.class);
+    	if(isDaftPunk)
+    		intent.putExtra("file_id", R.raw.daftpunk_info);
+    	else
+    		intent.putExtra("file_id", R.raw.senbonzakura_info);
     	startActivity(intent);
     }
     

@@ -9,5 +9,6 @@
     <string name="title_activity_welcome">WelcomeActivity</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="app_name_abbrev">URGBA</string>
 
 </resources>

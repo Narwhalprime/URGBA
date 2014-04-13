@@ -22,10 +22,13 @@ public final class R {
     }
     public static final class drawable {
         public static final int ic_launcher=0x7f020000;
+        public static final int urgba_logo=0x7f020001;
     }
     public static final class id {
-        public static final int action_settings=0x7f090005;
-        public static final int enter_main_button=0x7f090004;
+        public static final int action_settings=0x7f090007;
+        public static final int change_song_button=0x7f090004;
+        public static final int enter_main_button=0x7f090006;
+        public static final int go_back_button=0x7f090005;
         public static final int open_settings_button=0x7f090003;
         public static final int score_text_view=0x7f090001;
         public static final int start_game_button=0x7f090002;
@@ -52,13 +55,17 @@ public final class R {
         public static final int finish_tap=0x7f040006;
         public static final int keep_trying=0x7f040007;
         public static final int main_message=0x7f040008;
-        public static final int three_tap=0x7f040009;
-        public static final int welcome_message=0x7f04000a;
-        public static final int whistle=0x7f04000b;
+        public static final int senbonzakura=0x7f040009;
+        public static final int senbonzakura_info=0x7f04000a;
+        public static final int settings=0x7f04000b;
+        public static final int three_tap=0x7f04000c;
+        public static final int welcome_message=0x7f04000d;
+        public static final int whistle=0x7f04000e;
     }
     public static final class string {
         public static final int action_settings=0x7f060001;
         public static final int app_name=0x7f060000;
+        public static final int app_name_abbrev=0x7f060008;
         public static final int debug_shake_screen=0x7f060004;
         public static final int debug_tap_screen=0x7f060003;
         public static final int hello_world=0x7f060002;

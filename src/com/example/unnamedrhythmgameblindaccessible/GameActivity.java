@@ -1,7 +1,11 @@
 package com.example.unnamedrhythmgameblindaccessible;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -37,17 +41,19 @@ public class GameActivity extends Activity implements SensorEventListener {
     
     // song info stuff
     // read them from file instead
+    int rawID = 0;
     double SONG_LENGTH_MS;
-    double SONG_DELAY_MS = 140.0;
-    double SONG_BPM = 58.025;
+    double SONG_DELAY_MS;// = 140.0;
+    double SONG_BPM;// = 58.025;
     double NUMBER_BEATS;
     double BEAT_LENGTH;
+    int MAX_SCORE;// = 54;
 	
     // gameplay stuff!
     // TODO: even more hard-coding
     
     // the sequence of notes                  
-    String beatmap = "--------tTsS--sStT--sStT--sStTtTsStTtTsS-tT-sS-tTtTtTtTsS-tTsStTsStTtT-sS---";
+    String BEATMAP;// = "--------tTsS--sStT--sStT--sStTtTsStTtTsS-tT-sS-tTtTtTtTsS-tTsStTsStTtT-sS---";
     Map<String, String> patterns = new HashMap<String, String>(); // TODO: do this once singleton notes work
     boolean songStarted = false;
     int intervalCounter = 0;
@@ -56,7 +62,6 @@ public class GameActivity extends Activity implements SensorEventListener {
     char currentMapGesture = '-';
     char currentUserGesture = '-';
     int score = 0; // +2 for correct note, -2 for missing a note
-    int maxScore = 54;
     
     // UI stuff
 	Button tapButton;
@@ -70,7 +75,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 	MediaPlayer mMediaPlayerEnding;
 	
 	// sound option stuff
-	float songVolume = 0.8f;
+	float songVolume = 0.7f;
 	
 	// sensor stuff
     SensorManager mSensorManager;
@@ -89,10 +94,47 @@ public class GameActivity extends Activity implements SensorEventListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game);
 		
+		Intent intent = getIntent();
+		int fileID = intent.getExtras().getInt("file_id", R.raw.daftpunk_info);
+		
+		InputStream fis;
+		try {
+			Log.d("read in", "test");
+			fis = getResources().openRawResource(fileID);
+			Log.d("still reading in", "test 2");
+			
+			StringBuilder builder = new StringBuilder();
+			int ch;
+			while((ch = fis.read()) != -1){
+			    builder.append((char)ch);
+			}
+			fis.close();
+			
+			String songData = builder.toString();
+			StringTokenizer st = new StringTokenizer(songData, ";");
+			String nameSong = st.nextToken();
+			SONG_BPM = Double.parseDouble(st.nextToken());
+			SONG_DELAY_MS = Double.parseDouble(st.nextToken());
+			BEATMAP = st.nextToken();
+			MAX_SCORE = Integer.parseInt(st.nextToken());
+
+		} catch (FileNotFoundException e) {
+			Log.d("can't find file", "test 3");
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		tapButton = (Button)findViewById(R.id.tap_button);
 		scoreTextView = (TextView)findViewById(R.id.score_text_view);
 		
-		SONG_LENGTH_MS = MediaPlayer.create(getApplicationContext(), R.raw.daftpunk).getDuration();
+		// TODO: shh, also hack
+		if(fileID == R.raw.daftpunk_info)
+			rawID = R.raw.daftpunk;
+		else
+			rawID = R.raw.senbonzakura;
+		
+		SONG_LENGTH_MS = MediaPlayer.create(getApplicationContext(), rawID).getDuration();
         NUMBER_BEATS = ((SONG_BPM / 60.0) * (SONG_LENGTH_MS / 1000.0));
         BEAT_LENGTH = SONG_LENGTH_MS / NUMBER_BEATS;
         Log.d("GameActivity", "NUMBER_BEATS, BEAT_LENGTH = " + NUMBER_BEATS + " " + BEAT_LENGTH);
@@ -105,12 +147,12 @@ public class GameActivity extends Activity implements SensorEventListener {
 	protected void onResume() {
 		super.onResume();
 
-        mMediaPlayerSong = MediaPlayer.create(GameActivity.this, R.raw.daftpunk);
+        mMediaPlayerSong = MediaPlayer.create(GameActivity.this, rawID);
         mMediaPlayerSong.setOnCompletionListener(new OnCompletionListener() {
 
             @Override
             public void onCompletion(MediaPlayer mp) {
-            	if(score > maxScore / 2)
+            	if(score > MAX_SCORE / 2)
             		mMediaPlayerEnding = MediaPlayer.create(GameActivity.this, R.raw.congrats);
             	else
             		mMediaPlayerEnding = MediaPlayer.create(GameActivity.this, R.raw.keep_trying);
@@ -168,8 +210,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 				// reset user gesture, point to next interval and get next map gesture
 				currentUserGesture = '-';
 				
-				intervalCounter = Math.min(intervalCounter + 1, beatmap.length() - 1);
-				currentMapGesture = beatmap.charAt(intervalCounter);
+				intervalCounter = Math.min(intervalCounter + 1, BEATMAP.length() - 1);
+				currentMapGesture = BEATMAP.charAt(intervalCounter);
 				currentNumShakes = 0;
 				currentNumTaps = 0;
 			}
@@ -213,7 +255,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 	}
 	
 	public void onSensorChanged(SensorEvent event) {
-		if (event.sensor.getType() != Sensor.TYPE_ACCELEROMETER || !songStarted)
+		if (event.sensor.getType() != Sensor.TYPE_ACCELEROMETER)
 			return;
 		
 		float mSensorX = event.values[0];
