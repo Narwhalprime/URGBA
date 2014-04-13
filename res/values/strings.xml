@@ -6,5 +6,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="debug_tap_screen">Screen tapped!</string>
     <string name="debug_shake_screen">Screen shaked!</string>
+    <string name="title_activity_welcome">WelcomeActivity</string>
+    <string name="title_activity_main">MainActivity</string>
 
 </resources>
